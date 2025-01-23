@@ -54,7 +54,7 @@ Function Start-Delay() {
 Function Check-Files() {
     $files = Get-ChildItem -Path .\Files
 
-        # For each file, calculate the hash, and write to baseline.txt
+        # # For each file, calculate its hash and check if it has been created, modified, or unchanged
         foreach ($f in $files) {
             $hash = Calculate-File-Hash $f.FullName
 
@@ -65,8 +65,8 @@ Function Check-Files() {
             }
             else {
 
-                # Notify if a new file has been changed
-                if ($fileHashDictionary[$hash.Path] -eq $hash.Hash) {
+                # Notify if contents of an existing file has been changed
+                if ($fileHashDictionary[$hash.Path] -eq $hash.Hash) { #checking the content hash in the dictionary vs the new hash of the content just taken
                     # The file has not changed
                 }
                 else {
@@ -78,6 +78,8 @@ Function Check-Files() {
 
 }
 
+# dictionary (key,value) = (path, hash value)
+# no iteration needed, we are using th e Test-Path cmdlet
 Function Check-File-Exist() {
     foreach ($key in $fileHashDictionary.Keys) {
             $baselineFileStillExists = Test-Path -Path $key
